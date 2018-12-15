@@ -13,12 +13,14 @@ from sklearn.model_selection import GridSearchCV
 from sklearn import metrics
 from time import time
 from pprint import pprint
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use("TkAgg")
+from matplotlib import pyplot as plt
 import matplotlib as mpl
 
 
 def test_clf(clf):
-    print (u'分类器：', clf)
+    print (u'Classifier：', clf)
     alpha_can = np.logspace(-3, 2, 10)
     model = GridSearchCV(clf, param_grid={'alpha': alpha_can}, cv=5)
     m = alpha_can.size
@@ -42,15 +44,15 @@ def test_clf(clf):
     model.fit(x_train, y_train)
     t_end = time()
     t_train = (t_end - t_start) / (5*m)
-    print (u'5折交叉验证的训练时间为：%.3f秒/(5*%d)=%.3f秒' % ((t_end - t_start), m, t_train))
-    print( u'最优超参数为：', model.best_params_)
+    print (u'Training time for 5 -fold cross validation：%.3f/(5*%d) = %.3fsec' % ((t_end - t_start), m, t_train))
+    print( u'Optimal hyperparameter：', model.best_params_)
     t_start = time()
     y_hat = model.predict(x_test)
     t_end = time()
     t_test = t_end - t_start
-    print (u'测试时间：%.3f秒' % t_test)
+    print (u'Testing Time：%.3f sec' % t_test)
     acc = metrics.accuracy_score(y_test, y_hat)
-    print (u'测试集准确率：%.2f%%' % (100 * acc))
+    print (u'Accuracy ：%.2f%%' % (100 * acc))
     name = str(clf).split('(')[0]
     index = name.find('Classifier')
     if index != -1:
@@ -61,7 +63,7 @@ def test_clf(clf):
 
 
 if __name__ == "__main__":
-    print (u'开始下载/加载数据...')
+    print (u'start downloading...')
     t_start = time()
     # remove = ('headers', 'footers', 'quotes')
     remove = ()
@@ -70,29 +72,29 @@ if __name__ == "__main__":
     data_train = fetch_20newsgroups(subset='train', categories=categories, shuffle=True, random_state=0, remove=remove)
     data_test = fetch_20newsgroups(subset='test', categories=categories, shuffle=True, random_state=0, remove=remove)
     t_end = time()
-    print (u'下载/加载数据完成，耗时%.3f秒' % (t_end - t_start))
-    print (u'数据类型：', type(data_train))
-    print (u'训练集包含的文本数目：', len(data_train.data))
-    print (u'测试集包含的文本数目：', len(data_test.data))
-    print (u'训练集和测试集使用的%d个类别的名称：' % len(categories))
+    print (u'downloading completed，take %.3f sec' % (t_end - t_start))
+    print (u'data type：', type(data_train))
+    print (u'# of texts in train set ：', len(data_train.data))
+    print (u'# of texts in test set：', len(data_test.data))
+    print (u'name of%d categories：' % len(categories))
     categories = data_train.target_names
     pprint(categories)
     y_train = data_train.target
     y_test = data_test.target
-    print (u' -- 前10个文本 -- ')
+    print (u' -- Examples : the first 10 texts -- ')
     for i in np.arange(10):
-        print (u'文本%d(属于类别 - %s)：' % (i+1, categories[y_train[i]]))
+        print (u'category for text%d : %s' % (i+1, categories[y_train[i]]))
         print (data_train.data[i])
         print ('\n\n')
     vectorizer = TfidfVectorizer(input='content', stop_words='english', max_df=0.5, sublinear_tf=True)
     x_train = vectorizer.fit_transform(data_train.data)  # x_train是稀疏的，scipy.sparse.csr.csr_matrix
     x_test = vectorizer.transform(data_test.data)
-    print (u'训练集样本个数：%d，特征个数：%d' % x_train.shape)
-    print (u'停止词:\n',)
+    print (u'# of train set：%d，# of features：%d' % x_train.shape)
+    print (u'stop words:\n',)
     pprint(vectorizer.get_stop_words())
     feature_names = np.asarray(vectorizer.get_feature_names())
 
-    print (u'\n\n===================\n分类器的比较：\n')
+    print (u'\n\n===================\n evaluation of classifiers：\n')
     clfs = (MultinomialNB(),                # 0.87(0.017), 0.002, 90.39%
             BernoulliNB(),                  # 1.592(0.032), 0.010, 88.54%
             KNeighborsClassifier(),         # 19.737(0.282), 0.208, 86.03%
@@ -117,11 +119,11 @@ if __name__ == "__main__":
     b2 = ax_t.bar(x+0.25, time_train, width=0.25, color='#FFA0A0')
     b3 = ax_t.bar(x+0.5, time_test, width=0.25, color='#FF8080')
     plt.xticks(x+0.5, names, fontsize=10)
-    leg = plt.legend([b1[0], b2[0], b3[0]], (u'错误率', u'训练时间', u'测试时间'), loc='upper left', shadow=True)
+    leg = plt.legend([b1[0], b2[0], b3[0]], (u'error percentage', u'training time', u'testing time'), loc='upper left', shadow=True)
     # for lt in leg.get_texts():
     #     lt.set_fontsize(14)
-    plt.title(u'新闻组文本数据不同分类器间的比较', fontsize=18)
-    plt.xlabel(u'分类器名称')
+    plt.title(u'evaluation of different classifiers', fontsize=18)
+    plt.xlabel(u'name of classifier')
     plt.grid(True)
     plt.tight_layout(2)
     plt.show()
