@@ -166,15 +166,7 @@ def draw(result):
     time_test = time_test1.astype(np.float)
     time_train = time_train1.astype(np.float)
     err = err1.astype(np.float)
-
-    '''
-    for data in err:
-        data = float("{0:.4f}".format(data))
-    for data in time_train:
-        data = float("{0:.3f}".format(data))
-    for data in time_test:
-        data = float("{0:.3f}".format(data))
-    '''
+    
     x= np.arange(len(time_train))
     bar_width = 0.25
     ax1 = host_subplot(111, axes_class=AA.Axes)

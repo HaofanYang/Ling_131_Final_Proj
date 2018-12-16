@@ -4,7 +4,6 @@
 from sklearn.externals import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pickle
-import numpy as np
 
 def run(x, clf_name):
 	clf_name = clf_name + ".joblib"
@@ -24,7 +23,8 @@ if __name__ == "__main__":
 	run_file = "test.txt" # Please specify the file name you want to test
 	x = get_tfidf(run_file)
 	print("The classification for %s is:" % run_file)
-	clfs = ["MultinomialNB", "BernoulliNB",  "K_Neighbors",  "Ridge_Regression",  "RandomForest",  "SVC"]
+	clfs = ("MultinomialNB", "BernoulliNB",  "K_Neighbors",  "Ridge_Regression",  "RandomForest",  "SVC")
+	cat = ('alt.atheism', 'comp.graphics','sci.space', 'talk.religion.misc')
 	for clf in clfs:
-		print("%s: %s\n" % (clf, run(x, clf)))
+		print("%s: %s\n" % (clf, cat[run(x, clf)[0]]))
 
