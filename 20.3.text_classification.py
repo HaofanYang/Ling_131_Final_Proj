@@ -66,7 +66,9 @@ def test_clf(clf):
 
 def get_data():
 
-    remove = ('headers', 'footers', 'quotes')
+    #remove = ('headers', 'footers', 'quotes')
+
+    remove = ()
 
     categories = 'alt.atheism', 'talk.religion.misc', 'comp.graphics', 'sci.space'
 
