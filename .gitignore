@@ -1,10 +1,24 @@
 
-20news-bydate/
 
-Proposal.docx
+# Project specific Files #
+##########################
+
+# data set #
+20news-bydate/
 20news-bydate.rar
+Proposal.docx
+
+# misc #
 test.md
 test.txt
+
+# saved classifier #
+*.joblib
+*.pickle
+
+
+
+
 
 
 # Compiled source #
