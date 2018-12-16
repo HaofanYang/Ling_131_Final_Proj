@@ -202,15 +202,12 @@ def draw(result):
 if __name__ == "__main__":
 
     data_train, data_test = get_data()
-
     print_data_info(data_train, data_test)
 
     y_train, y_test = get_y_data(data_train, data_test)
-
     print_examples(y_train, data_train)
 
     x_train, x_test, vectorizer = tfidf_data(data_train, data_test)
-
     print_x_data(x_train, vectorizer)
 
     draw(classifier())
