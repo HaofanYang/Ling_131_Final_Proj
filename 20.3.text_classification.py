@@ -217,4 +217,5 @@ if __name__ == "__main__":
     x_train, x_test, vectorizer = tfidf_data(data_train, data_test)
 
     print_x_data(x_train, vectorizer)
+
     draw(classifier())
