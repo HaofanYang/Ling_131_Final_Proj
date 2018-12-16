@@ -3,6 +3,8 @@
 # -*- coding:utf-8 -*-
 from sklearn.externals import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
+import pickle
+import numpy as np
 
 def run(x, clf_name):
 	clf_name = clf_name + ".joblib"
@@ -11,11 +13,11 @@ def run(x, clf_name):
 
 def get_tfidf(filename):
 	text = ""
-	vectorizer = TfidfVectorizer(input='content', stop_words='english', max_df=0.5, sublinear_tf=True)
+	vectorizer = pickle.load(open("vec.pickle"))
 	with open(filename) as fl:
 		for line in fl:
 			text += line
-	return vectorizer.fit_transform([text,])  
+	return vectorizer.transform([text])  
 
 
 if __name__ == "__main__":

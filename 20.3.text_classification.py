@@ -23,6 +23,7 @@ import matplotlib as mpl
 from mpl_toolkits.axes_grid1 import host_subplot
 import mpl_toolkits.axisartist as AA
 from sklearn.externals import joblib
+import pickle
 
 
 def test_clf(name, clf):
@@ -115,7 +116,9 @@ def tfidf_data(data_train, data_test):
 
     vectorizer = TfidfVectorizer(input='content', stop_words='english', max_df=0.5, sublinear_tf=True)
 
-    x_train = vectorizer.fit_transform(data_train.data)  # x_train是稀疏的，scipy.sparse.csr.csr_matrix
+    vec = vectorizer.fit(data_train.data)
+    pickle.dump(vec, open("vec.pickle", "wb"))
+    x_train = vectorizer.transform(data_train.data)  # x_train是稀疏的，scipy.sparse.csr.csr_matrix
     x_test = vectorizer.transform(data_test.data)
 
     return x_train, x_test, vectorizer
