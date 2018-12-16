@@ -62,37 +62,97 @@ def test_clf(clf):
     return t_train, t_test, 1-acc, name
 
 
-if __name__ == "__main__":
-    print (u'start downloading...')
-    t_start = time()
-    # remove = ('headers', 'footers', 'quotes')
-    remove = ()
+
+
+def get_data():
+
+    remove = ('headers', 'footers', 'quotes')
+
     categories = 'alt.atheism', 'talk.religion.misc', 'comp.graphics', 'sci.space'
-    # categories = None     # 若分类所有类别，请注意内存是否够用
+
+    print(u'start downloading...')
+
+    t_start = time()
+
     data_train = fetch_20newsgroups(subset='train', categories=categories, shuffle=True, random_state=0, remove=remove)
     data_test = fetch_20newsgroups(subset='test', categories=categories, shuffle=True, random_state=0, remove=remove)
+
     t_end = time()
-    print (u'downloading completed，take %.3f sec' % (t_end - t_start))
-    print (u'data type：', type(data_train))
-    print (u'# of texts in train set ：', len(data_train.data))
-    print (u'# of texts in test set：', len(data_test.data))
-    print (u'name of%d categories：' % len(categories))
-    categories = data_train.target_names
-    pprint(categories)
+
+    print(u'downloading completed，take %.3f sec' % (t_end - t_start))
+
+    return data_train, data_test
+
+
+def print_data_info(data_train, data_test):
+
+    print(u'data type：', type(data_train))
+    print(u'# of texts in train set ：', len(data_train.data))
+    print(u'# of texts in test set：', len(data_test.data))
+    print(u'name of%d categories：' % len(data_train.target_names))
+
+    pprint(data_train.target_names)
+
+
+def get_y_data(data_train, data_test):
+
     y_train = data_train.target
     y_test = data_test.target
-    print (u' -- Examples : the first 10 texts -- ')
-    for i in np.arange(10):
-        print (u'category for text%d : %s' % (i+1, categories[y_train[i]]))
-        print (data_train.data[i])
-        print ('\n\n')
+
+    return y_train, y_test
+
+
+def tfidf_data(data_train, data_test):
+
     vectorizer = TfidfVectorizer(input='content', stop_words='english', max_df=0.5, sublinear_tf=True)
+
     x_train = vectorizer.fit_transform(data_train.data)  # x_train是稀疏的，scipy.sparse.csr.csr_matrix
     x_test = vectorizer.transform(data_test.data)
-    print (u'# of train set：%d，# of features：%d' % x_train.shape)
-    print (u'stop words:\n',)
+
+    return x_train, x_test, vectorizer
+
+
+def print_examples(y_train, data_train):
+
+    print(u' -- Examples : the first 10 texts -- ')
+
+    categories = data_train.target_names
+
+    for i in np.arange(10):
+        print(u'category for text%d : %s' % (i + 1, categories[y_train[i]]))
+        print(data_train.data[i])
+        print('\n\n')
+
+
+def print_x_data(x_train, vectorizer):
+
+    print(u'# of train set：%d，# of features：%d' % x_train.shape)
+    print(u'stop words:\n', )
+
     pprint(vectorizer.get_stop_words())
     feature_names = np.asarray(vectorizer.get_feature_names())
+
+
+
+
+
+
+if __name__ == "__main__":
+
+    data_train, data_test = get_data()
+
+    print_data_info(data_train, data_test)
+
+    y_train, y_test = get_y_data(data_train, data_test)
+
+    print_examples(y_train, data_train)
+
+    x_train, x_test, vectorizer = tfidf_data(data_train, data_test)
+
+    print_x_data(x_train, vectorizer)
+
+
+
 
     print (u'\n\n===================\n evaluation of classifiers：\n')
     clfs = (MultinomialNB(),                # 0.87(0.017), 0.002, 90.39%
