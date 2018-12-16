@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
+
 import numpy as np
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB
 from sklearn.datasets import fetch_20newsgroups
@@ -17,6 +20,9 @@ import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib import pyplot as plt
 import matplotlib as mpl
+from mpl_toolkits.axes_grid1 import host_subplot
+import mpl_toolkits.axisartist as AA
+
 
 
 def test_clf(clf):
@@ -134,10 +140,67 @@ def print_x_data(x_train, vectorizer):
     pprint(vectorizer.get_stop_words())
     feature_names = np.asarray(vectorizer.get_feature_names())
 
+def classifier():
+    print(u'\n\n===================\n evaluation of classifiers：\n')
+    clfs = (MultinomialNB(),  # 0.87(0.017), 0.002, 90.39%
+            BernoulliNB(),  # 1.592(0.032), 0.010, 88.54%
+            KNeighborsClassifier(),  # 19.737(0.282), 0.208, 86.03%
+            RidgeClassifier(),  # 25.6(0.512), 0.003, 89.73%
+            RandomForestClassifier(n_estimators=200),  # 59.319(1.977), 0.248, 77.01%
+            SVC()  # 236.59(5.258), 1.574, 90.10%
+            )
+    result = []
+    for clf in clfs:
+        a = test_clf(clf)
+        result.append(a)
+        print('\n')
+    return np.array(result)
 
 
+def draw(result):
+    time_train1, time_test1, err1, names = result.T
+    time_test = time_test1.astype(np.float)
+    time_train = time_train1.astype(np.float)
+    err = err1.astype(np.float)
 
+    '''
+    for data in err:
+        data = float("{0:.4f}".format(data))
+    for data in time_train:
+        data = float("{0:.3f}".format(data))
+    for data in time_test:
+        data = float("{0:.3f}".format(data))
+    '''
+    x= np.arange(len(time_train))
+    bar_width = 0.25
+    ax1 = host_subplot(111, axes_class=AA.Axes)
+    plt.subplots_adjust(right = 0.75)
 
+    ax2 = ax1.twinx()
+    ax3 = ax1.twinx()
+    offset3 = 60
+    offset2 = 0
+
+    new_fixed_axis = ax3.get_grid_helper().new_fixed_axis
+    ax3.axis["right"] = new_fixed_axis(loc="right", axes=ax3, offset=(offset3, 0))
+    ax3.axis["right"].toggle(all=True)
+
+    new_fixed_axis2 = ax2.get_grid_helper().new_fixed_axis
+    ax2.axis["right"] = new_fixed_axis2(loc="right", axes=ax2, offset=(offset2, 0))
+    ax2.axis["right"].toggle(all=True)
+
+    ax1.set_ylabel("Error percentage")
+    ax2.set_ylabel("training time")
+    ax3.set_ylabel("testing time")
+
+    b1 = ax1.bar(x, err, bar_width, alpha=0.2, color='r')
+    b2 = ax2.bar(x + bar_width, time_train, bar_width, alpha=0.2, color='g')
+    b3 = ax3.bar(x + bar_width * 2, time_test, bar_width, alpha=0.2, color='b')
+    plt.xticks(x + bar_width * 2, names)
+    plt.legend([b1[0], b2[0], b3[0]], ('Error Percentage', 'Training Time', 'Testing Time'), loc='upper left')
+    plt.xlabel('Different Types Of Classifiers')
+    plt.title('Evaluation Of Different Classifiers')
+    plt.show()
 
 if __name__ == "__main__":
 
@@ -152,10 +215,10 @@ if __name__ == "__main__":
     x_train, x_test, vectorizer = tfidf_data(data_train, data_test)
 
     print_x_data(x_train, vectorizer)
+    draw(classifier())
 
 
-
-
+'''
     print (u'\n\n===================\n evaluation of classifiers：\n')
     clfs = (MultinomialNB(),                # 0.87(0.017), 0.002, 90.39%
             BernoulliNB(),                  # 1.592(0.032), 0.010, 88.54%
@@ -189,3 +252,4 @@ if __name__ == "__main__":
     plt.grid(True)
     plt.tight_layout(2)
     plt.show()
+'''
