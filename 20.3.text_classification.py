@@ -27,7 +27,7 @@ import pickle
 
 
 def test_clf(name, clf, x_train, y_train):
-    print (u'Classifier：', clf)
+    print ('Classifier：', clf)
     alpha_can = np.logspace(-3, 2, 10)
     model = GridSearchCV(clf, param_grid={'alpha': alpha_can}, cv=5)
     m = alpha_can.size
@@ -73,8 +73,6 @@ def test_clf(name, clf, x_train, y_train):
 
 
 def get_data():
-
-    #remove = ('headers', 'footers', 'quotes')
 
     remove = ()
 
@@ -141,8 +139,9 @@ def print_x_data(x_train, vectorizer):
     print('# of train set：%d，# of features：%d' % x_train.shape)
     print('stop words:\n', )
 
-    pprint(vectorizer.get_stop_words())
     feature_names = np.asarray(vectorizer.get_feature_names())
+
+    pprint(vectorizer.get_stop_words())
 
 def classifier(x, y):
     print('\n\n===================\n evaluation of classifiers：\n')
