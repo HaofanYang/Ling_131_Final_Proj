@@ -27,10 +27,18 @@ import pickle
 
 
 def test_clf(name, clf, x_train, y_train):
+    '''
+    :param name: str, name of the classifier
+    :param clf: classifier object
+    :param x_train: x data
+    :param y_train: y data
+    :return: error rate, training time and testing time of this classifier
+    '''
     print ('Classifier：', clf)
     alpha_can = np.logspace(-3, 2, 10)
     model = GridSearchCV(clf, param_grid={'alpha': alpha_can}, cv=5)
     m = alpha_can.size
+
     if hasattr(clf, 'alpha'):
         model.set_params(param_grid={'alpha': alpha_can})
         m = alpha_can.size
@@ -47,6 +55,7 @@ def test_clf(name, clf, x_train, y_train):
         max_depth_can = np.arange(4, 10)
         model.set_params(param_grid={'max_depth': max_depth_can})
         m = max_depth_can.size
+
     t_start = time()
     model.fit(x_train, y_train)
     t_end = time()
@@ -73,10 +82,19 @@ def test_clf(name, clf, x_train, y_train):
 
 
 def get_data():
+    '''
+    :return: Bunch, training data and testing data
 
+    bunch : Bunch object
+        bunch.data: sparse matrix, shape [n_samples, n_features]
+        bunch.target: array, shape [n_samples]
+        bunch.target_names: list, length [n_classes]
+        bunch.DESCR: a description of the dataset.
+    '''
     remove = ()
 
-    categories = 'alt.atheism', 'talk.religion.misc', 'comp.graphics', 'sci.space'
+    categories = 'comp.graphics', 'comp.os.ms-windows.misc', 'comp.sys.ibm.pc.hardware', 'comp.sys.mac.hardware',\
+                 'comp.windows.x'
 
     print('start downloading...')
 
@@ -93,6 +111,9 @@ def get_data():
 
 
 def print_data_info(data_train, data_test):
+    '''
+    Printing some info about the dataset we download
+    '''
 
     print('data type：', type(data_train))
     print('# of texts in train set ：', len(data_train.data))
@@ -103,7 +124,9 @@ def print_data_info(data_train, data_test):
 
 
 def get_y_data(data_train, data_test):
-
+    '''
+    Simply extract y data from dataset and return
+    '''
     y_train = data_train.target
     y_test = data_test.target
 
@@ -111,7 +134,9 @@ def get_y_data(data_train, data_test):
 
 
 def tfidf_data(data_train, data_test):
-
+    '''
+    Fit x data to TF-IDF model and return
+    '''
     vectorizer = TfidfVectorizer(input='content', stop_words='english', max_df=0.5, sublinear_tf=True)
 
     vec = vectorizer.fit(data_train.data)
@@ -123,28 +148,32 @@ def tfidf_data(data_train, data_test):
 
 
 def print_examples(y_train, data_train):
-
-    print(' -- Examples : the first 10 texts -- ')
+    '''
+    Print some example text alongside with their categories
+    '''
+    print(' -- Examples : the first 3 texts -- ')
 
     categories = data_train.target_names
 
-    for i in np.arange(10):
-        print('category for text%d : %s' % (i + 1, categories[y_train[i]]))
-        print(data_train.data[i])
+    for i in np.arange(3):
+        print('----------\n','category for text%d : %s' % (i + 1, categories[y_train[i]]))
+        print(data_train.data[i][:500], '...')
         print('\n\n')
 
 
 def print_x_data(x_train, vectorizer):
-
+    '''
+    Print x data's info after fitting to TF-IDF model
+    '''
     print('# of train set：%d，# of features：%d' % x_train.shape)
     print('stop words:\n', )
-
-    feature_names = np.asarray(vectorizer.get_feature_names())
 
     pprint(vectorizer.get_stop_words())
 
 def classifier(x, y):
-
+    '''
+    :return: an array of results(each result includes error rate, training time and testing time of a classifier)
+    '''
     print('\n\n===================\n evaluation of classifiers：\n')
     clfs = {"MultinomialNB": MultinomialNB(), 
             "BernoulliNB": BernoulliNB(),  
@@ -162,6 +191,10 @@ def classifier(x, y):
 
 
 def draw(result):
+    '''
+    Draw a diagram to render results
+    :param result: an array of results(each result includes error rate, training time and testing time of a classifier)
+    '''
     time_train1, time_test1, err1, names = result.T
     time_test = time_test1.astype(np.float)
     time_train = time_train1.astype(np.float)
