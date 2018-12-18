@@ -62,7 +62,10 @@ def test_clf(name, clf, x_train, y_train):
     t_train = (t_end - t_start) / (5*m)
     print ('Training time for 5 -fold cross validation：%.3f/(5*%d) = %.3fsec' % ((t_end - t_start), m, t_train))
     print( 'Optimal hyperparameter：', model.best_params_)
+
+    # save
     joblib.dump(model, "%s.joblib"%name)
+
     t_start = time()
     y_hat = model.predict(x_test)
     t_end = time()
@@ -70,6 +73,7 @@ def test_clf(name, clf, x_train, y_train):
     print ('Testing Time：%.3f sec' % t_test)
     acc = metrics.accuracy_score(y_test, y_hat)
     print ('Accuracy ：%.2f%%' % (100 * acc))
+
     name = str(clf).split('(')[0]
     index = name.find('Classifier')
     if index != -1:
@@ -77,7 +81,6 @@ def test_clf(name, clf, x_train, y_train):
     if name == 'SVC':
         name = 'SVM'
     return t_train, t_test, 1-acc, name
-
 
 
 
