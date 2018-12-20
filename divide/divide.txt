@@ -1,0 +1,13 @@
+Contribution:
+Code:
+Analyse the data and get the labeled database: Danyi Huang
+Module selection, feature extraction, train the classifier: He Zhang, Yirun Zhou
+Save the classifier and write run.py to run the classifier: Haofan Yang
+Refactor: Yirun Zhou
+
+Data visualization: Danyi Huang
+Report:
+Background, Goals and motivations: Danyi Huang
+Initial Design: Danyi Huang, Haofan Yang
+Application: He Zhang, Haofan Yang, Yirun Zhou, Danyi Huang
+Process and Challenge, Future improvement: He Zhang, Yirun Zhou
