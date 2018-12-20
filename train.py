@@ -97,7 +97,7 @@ def get_data():
     remove = ()
 
     categories = 'comp.graphics', 'comp.os.ms-windows.misc', 'comp.sys.ibm.pc.hardware', 'comp.sys.mac.hardware',\
-                 'comp.windows.x'
+                 'comp.windows.x', 'rec.autos', 'rec.motorcycles', 'rec.sport.baseball', 'rec.sport.hockey',
 
     print('start downloading...')
 
