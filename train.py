@@ -167,6 +167,7 @@ def print_examples(y_train, data_train):
         print('\n\n')
 
 
+
 def print_x_data(x_train, vectorizer):
     '''
     Print x data's info after fitting to TF-IDF model
