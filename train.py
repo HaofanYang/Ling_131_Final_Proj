@@ -1,8 +1,11 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-#!/usr/bin/python
-# -*- coding:utf-8 -*-
+'''
+    >>> python3 train.py
+    Then the program will download student email dataset, train six different classifiers and evaluate them
+'''
+
 
 import numpy as np
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB
@@ -19,7 +22,7 @@ from pprint import pprint
 import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib import pyplot as plt
-import matplotlib as mpl
+
 from mpl_toolkits.axes_grid1 import host_subplot
 import mpl_toolkits.axisartist as AA
 from sklearn.externals import joblib
