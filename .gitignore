@@ -16,7 +16,10 @@ test.txt
 *.joblib
 *.pickle
 
-
+# report segments #
+Haofan_part.ipynb
+.ipynb_checkpoints
+Performance_his.png
 
 
 
